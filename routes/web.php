@@ -28,4 +28,17 @@ $router->post('/', function (Request $request) use ($router) {
     foreach ($request->input() as $feed) {
         (new Models\Feed($feed))->firstOrCreate(['href' => $feed['href']], $feed);
     }
+    
+    return response('', 200, [
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => '*',
+        'Access-Control-Allow-Headers' => 'Content-Type',
+    ]);
+});
+
+$router->get('/', function () {
+    return view('index', [
+        'count' => Models\Feed::count(),
+        'feeds' => Models\Feed::orderBy('id', 'desc')->limit(20)->get(),
+    ]);
 });
